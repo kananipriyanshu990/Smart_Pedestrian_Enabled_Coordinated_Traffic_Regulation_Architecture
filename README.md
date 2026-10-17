@@ -1,0 +1,1 @@
+# Smart_Pedestrian_Enabled_Coordinated_Traffic_Regulation_Architecture
