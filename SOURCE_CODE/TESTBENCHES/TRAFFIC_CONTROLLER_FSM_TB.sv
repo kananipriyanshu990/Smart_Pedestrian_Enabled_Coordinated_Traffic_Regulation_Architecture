@@ -21,56 +21,65 @@ module TRAFFIC_CONTROLLER_FSM_TB;
     wire [3:0] state_debug;
     wire ped_quota_used;
 
-    TRAFFIC_CONTROLLER_FSM #(.GREEN_SECONDS(8),
-                             .YELLOW_SECONDS(3),
-                             .ALL_RED_SECONDS(1),
-                             .PED_WALK_SECONDS(4),
-                             .PED_CLEAR_SECONDS(2),
-                             .GREEN_EXTENSION_SEC(2)) 
-    TRF_CNTLR_FSM(.clk(clk),
-                  .reset(reset),
-                  .one_sec_tick(one_sec_tick),
-
-                  .request_n(request_n),
-                  .request_e(request_e),
-                  .request_s(request_s),
-                  .request_w(request_w),
-                  .north_color(north_color),
-                  .east_color(east_color),
-                  .south_color(south_color),
-                  .west_color(west_color),
-                  .pedestrian_walk(pedestrian_walk),
-                  .remaining_seconds(remaining_seconds),
-                  .state_debug(state_debug),
-                  .ped_quota_used(ped_quota_used));
+    TRAFFIC_CONTROLLER_FSM #(
+        .GREEN_SECONDS(8),
+        .YELLOW_SECONDS(3),
+        .ALL_RED_SECONDS(1),
+        .PED_WALK_SECONDS(4),
+        .PED_CLEAR_SECONDS(2),
+        .GREEN_EXTENSION_SEC(2)
+    ) TRF_CNTLR_FSM (
+        .clk(clk),
+        .reset(reset),
+        .one_sec_tick(one_sec_tick),
+        .request_n(request_n),
+        .request_e(request_e),
+        .request_s(request_s),
+        .request_w(request_w),
+        .north_color(north_color),
+        .east_color(east_color),
+        .south_color(south_color),
+        .west_color(west_color),
+        .pedestrian_walk(pedestrian_walk),
+        .remaining_seconds(remaining_seconds),
+        .state_debug(state_debug),
+        .ped_quota_used(ped_quota_used)
+    );
 
     always #5 clk = ~clk;
 
+    // Generate a one-clock-wide tick every 100 ns (one simulated second).
     initial begin
-        clk = 0;
-        reset = 1;
-        one_sec_tick = 0;
-
-        request_n = 0;
-        request_e = 0;
-        request_s = 0;
-        request_w = 0;
-
-        repeat (4) @(negedge clk);
-        reset = 0;
-
+        one_sec_tick = 1'b0;
         forever begin
-            repeat (10) @(negedge clk);
-            one_sec_tick = 1;
-            @(negedge clk);
-            one_sec_tick = 0;
+            #90 one_sec_tick = 1'b1;
+            #10 one_sec_tick = 1'b0;
         end
     end
 
+    // Keep requests inactive to observe one uninterrupted vehicle cycle.
     initial begin
+        clk = 1'b0;
+        reset = 1'b1;
+        request_n = 1'b0;
+        request_e = 1'b0;
+        request_s = 1'b0;
+        request_w = 1'b0;
 
-        repeat (1000000) @(negedge clk);
-        $finish;
+        #40 reset = 1'b0;
+        
+        #20;
+        request_n = 1'b1;
+        #5;
+        request_n = 1'b0;
+        
+        #150;
+        request_w = 1'b1;
+        #5;
+        request_w = 1'b0;
+        
+        // One cycle is 48 ticks = 4800 ns.
+        #5960; $finish;
     end
 
 endmodule
