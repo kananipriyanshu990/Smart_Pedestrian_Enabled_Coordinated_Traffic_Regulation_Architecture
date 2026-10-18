@@ -14,21 +14,6 @@ SPECTRA is an FPGA-based traffic management system designed to coordinate four-w
 - **Digital Countdown Display:** Displays the remaining phase duration on seven-segment displays.
 - **Configurable Timing:** Allows traffic and pedestrian timing parameters to be adjusted.
 
-## Hardware Platform
-
-| Component | Specification |
-|---|---|
-| FPGA Board | Terasic DE1 |
-| FPGA Device | Intel/Altera Cyclone II EP2C20F484C7 |
-| Description Language | Verilog HDL |
-| Simulation | Vivado Simulator |
-| Hardware Implementation | Intel Quartus II |
-| Clock Source | 50 MHz onboard clock |
-| User Inputs | Slide switches and push buttons |
-| Outputs | Vehicle LEDs, pedestrian LEDs, and seven-segment displays |
-
-External LEDs can be connected through the board's GPIO interface to represent the four vehicle signal assemblies and four pedestrian signals.
-
 ## System Architecture
 
 The design is divided into reusable Verilog modules:
