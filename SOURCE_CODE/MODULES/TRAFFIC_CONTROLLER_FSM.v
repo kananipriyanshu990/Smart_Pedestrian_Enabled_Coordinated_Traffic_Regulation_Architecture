@@ -259,16 +259,28 @@ module TRAFFIC_CONTROLLER_FSM #(parameter GREEN_SECONDS = 10,
         remaining_seconds = timer;
 
         case (state)
-            NORTH_GREEN: north_color = GREEN;
+            NORTH_GREEN: begin
+                north_color = GREEN;
+                pedestrian_walk = 4'b0010; // East pedestrian WALK
+            end
             NORTH_YELLOW: north_color = YELLOW;
 
-            EAST_GREEN: east_color = GREEN;
+            EAST_GREEN: begin
+                east_color = GREEN;
+                pedestrian_walk = 4'b0100; // South pedestrian WALK
+            end
             EAST_YELLOW: east_color = YELLOW;
 
-            SOUTH_GREEN: south_color = GREEN;
+            SOUTH_GREEN: begin
+                south_color = GREEN;
+                pedestrian_walk = 4'b1000; // West pedestrian WALK
+            end
             SOUTH_YELLOW: south_color = YELLOW;
 
-            WEST_GREEN: west_color = GREEN;
+            WEST_GREEN: begin
+                west_color = GREEN;
+                pedestrian_walk = 4'b0001; // North pedestrian WALK
+            end
             WEST_YELLOW: west_color = YELLOW;
 
             PED_WALK: pedestrian_walk = selected_pedestrian;
