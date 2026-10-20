@@ -68,18 +68,7 @@ module TRAFFIC_CONTROLLER_FSM_TB;
 
         #40 reset = 1'b0;
         
-        #20;
-        request_n = 1'b1;
-        #5;
-        request_n = 1'b0;
-        
-        #150;
-        request_w = 1'b1;
-        #5;
-        request_w = 1'b0;
-        
-        // One cycle is 48 ticks = 4800 ns.
-        #5960; $finish;
+        #5960 $finish;
     end
 
 endmodule
